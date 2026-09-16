@@ -1,5 +1,5 @@
 # Alejandro Lopez
-Nombre del Proyecto:
+Nombre del Proyecto: Kingdog-of-Electronics
 Una aplicación web visual e interactiva en la que puedes desarmar y ensamblar computadoras y teléfonos inteligentes pieza por pieza directamente en tu pantalla.
 
 Descripción del Proyecto
