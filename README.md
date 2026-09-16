@@ -1,24 +1,22 @@
 # Alejandro Lopez
 Nombre del Proyecto:
-Una plataforma web basada exclusivamente en texto para aprender a armar, desarmar y diagnosticar computadoras de escritorio, laptops y teléfonos inteligentes paso a paso.
+Una aplicación web visual e interactiva en la que puedes desarmar y ensamblar computadoras y teléfonos inteligentes pieza por pieza directamente en tu pantalla.
 
 Descripción del Proyecto
-Este proyecto sustituye los gráficos 3D complejos por una interfaz minimalista y educativa basada en texto. A través de descripciones detalladas, diagramas en arte ASCII, menús interactivos y respuestas de consola, el usuario aprende sobre arquitectura de hardware, tipos de conectores, herramientas requeridas y el orden estricto de ensamblaje de cada dispositivo.
+Este proyecto es un simulador interactivo enfocado en la física y manipulación de piezas. El usuario interactúa de forma directa con el dispositivo: usa herramientas para quitar tornillos uno a uno, desconecta cables flexionables, despega baterías y retira componentes (tarjetas de video, memorias RAM, pantallas) arrastrándolos a la mesa de trabajo.
 
 Características Principales
-Catálogo de Dispositivos: Laptops, PCs de escritorio y smartphones de diversas generaciones.
+Manipulación Directa: Haz clic para desatornillar, arrastra para retirar o colocar componentes y desliza para desconectar cables.
 
-Flujo Realista de Ensamblaje: Motor de reglas que exige el orden correcto (por ejemplo, desconectar la batería antes de retirar la placa madre).
+Herramientas Interactivas: Selecciona la herramienta correcta (destornillador Philips, ventosa para pantallas, espátula plástica) y aplícala directamente sobre la pieza.
 
-Gestión de Herramientas: Uso de destornilladores específicos, pinzas y espátulas plásticas según el componente.
+Modelos Interactivos de Hardware: PCs de escritorio, laptops y celulares estructurados por capas y conexiones físicas realistas.
 
-Inspección de Piezas: Explicación detallada de la función de cada componente, socket y cable.
+Mesa de Trabajo (Inventario Visual): Organiza las piezas y tornillos retirados en la mesa para no perder nada durante el proceso.
 
-Modo Desafío y Diagnóstico: Identificación y solución de fallas retirando y reemplazando piezas dañadas.
+Modo Libre y Modo Guía: Elige entre desarmar con pistas paso a paso o explorar libremente bajo tu propio riesgo.
 
-Accesibilidad: Diseñado para cargar instantáneamente en cualquier navegador y dispositivo sin requerir tarjeta gráfica dedicada.
+Tecnologías Sugeridas
+Renderizado Visual: Motor web 2D/3D (como Canvas API, PixiJS, Three.js o Phaser) para gestionar arrastres, capas de componentes y animaciones.
 
-Tecnologías Utilizadas
-Interfaz de Usuario: Framework web moderno para el renderizado de la estructura visual e historial de comandos.
-
-Manejo de Estado: Motor interno para gestionar el árbol de dependencias de las piezas y el inventario.
+Motor de Interacción: Sistema de eventos táctiles y de puntero (Pointer Events / Drag & Drop).
