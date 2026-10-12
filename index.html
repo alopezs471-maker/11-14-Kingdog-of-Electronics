@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101619">
+  <title>Kingdog · Taller de electrónica</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0c1113;
+      --panel: #141c1f;
+      --line: #29363a;
+      --text: #eef3ef;
+      --muted: #a3b1ab;
+      --mint: #77e1c4;
+      --amber: #f1bd64;
+      --shadow: #0009;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100svh;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 78% -4%, #18504466, transparent 36rem),
+        radial-gradient(ellipse at 4% 74%, #34505422, transparent 33rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 26px 0 36px; }
+    .header { display:flex; justify-content:space-between; align-items:center; gap:16px; padding-bottom:24px; border-bottom:1px solid #ffffff12; }
+    .brand { display:flex; align-items:center; gap:12px; color:var(--text); text-decoration:none; }
+    .brand-mark { display:grid; place-items:center; width:40px; height:40px; border:1px solid #77e1c455; border-radius:12px; color:var(--mint); background:#77e1c410; font-weight:800; letter-spacing:-.08em; }
+    .brand-title { font-weight:750; letter-spacing:.02em; }
+    .brand-title span { color:var(--mint); }
+    .edition { color:var(--muted); font-size:.8rem; }
+    .hero { max-width:760px; margin:54px auto 38px; text-align:center; }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; color:var(--mint); font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+    .eyebrow::before { content:""; width:20px; height:1px; background:currentColor; }
+    h1 { margin:14px 0 12px; font-size:clamp(2.1rem, 6vw, 4.2rem); line-height:1.02; letter-spacing:-.055em; }
+    .intro { max-width:610px; margin:0 auto; color:var(--muted); font-size:clamp(.95rem, 2vw, 1.08rem); line-height:1.65; }
+    .cards { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:22px; }
+    .device-card { display:flex; flex-direction:column; min-width:0; padding:20px; border:1px solid var(--line); border-radius:22px; background:linear-gradient(145deg,#192225eF,#101719f5); box-shadow:0 22px 60px var(--shadow); overflow:hidden; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
+    .device-card:hover { transform:translateY(-3px); border-color:#77e1c477; box-shadow:0 27px 64px #000b,0 0 0 1px #77e1c415 inset; }
+    .device-art { position:relative; display:grid; place-items:center; min-height:245px; margin:-2px -2px 18px; border:1px solid #ffffff10; border-radius:16px; overflow:hidden; background:radial-gradient(ellipse at 50% 100%,#2845443b,transparent 55%),repeating-linear-gradient(0deg,transparent 0 24px,#ffffff08 25px),repeating-linear-gradient(90deg,transparent 0 24px,#ffffff08 25px),#0e1416; }
+    .art-light { position:absolute; width:190px; height:190px; border-radius:50%; background:#77e1c41b; filter:blur(45px); }
+    .phone-art { position:relative; width:112px; height:218px; padding:9px; border:2px solid #67736f; border-radius:24px; background:linear-gradient(130deg,#55605f,#151c1e 38%,#303a3a 70%,#101516); box-shadow:0 20px 38px #000b,inset 0 0 0 3px #0b0f10; transform:rotate(-7deg); }
+    .phone-art::before { content:""; position:absolute; top:7px; left:50%; z-index:2; width:34px; height:8px; border-radius:8px; background:#080c0d; transform:translateX(-50%); }
+    .phone-glass { width:100%; height:100%; border:1px solid #aab5af55; border-radius:16px; background:radial-gradient(ellipse at 32% 28%,#77e1c455,transparent 35%),linear-gradient(145deg,#273635,#101719 62%,#354642); }
+    .tower-art { position:relative; width:146px; height:222px; padding:10px; border:2px solid #77817d; border-radius:14px; background:linear-gradient(120deg,#68716e,#242d2e 24%,#111718 78%,#444d4c); box-shadow:0 20px 42px #000b,inset 0 0 0 4px #111516; transform:rotate(4deg); }
+    .tower-sidepanel { position:absolute; inset:11px 29px 11px 11px; border:1px solid #b4beb7aa; border-radius:8px; background:repeating-linear-gradient(135deg,transparent 0 13px,#ffffff0b 14px 15px),linear-gradient(145deg,#68716e 0%,#343c3a 43%,#202726 100%); box-shadow:inset 0 0 0 3px #171d1c,0 3px 8px #0008; }
+    .tower-sidepanel::before { content:""; position:absolute; top:14px; right:7px; width:18px; height:92px; border:1px solid #aeb8b177; border-radius:5px; background:repeating-linear-gradient(0deg,#141a19 0 3px,#7e8782 4px 5px); }
+    .tower-front { position:absolute; top:14px; right:7px; bottom:14px; width:17px; border:1px solid #77807c; border-radius:5px; background:repeating-linear-gradient(0deg,#252d2d 0 4px,#111719 5px 7px); }
+    .card-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .tag { padding:5px 9px; border:1px solid #ffffff17; border-radius:999px; color:#c6d1cb; background:#ffffff07; font:600 .65rem/1.2 ui-monospace,SFMono-Regular,Menlo,monospace; text-transform:uppercase; letter-spacing:.08em; }
+    .available { display:flex; align-items:center; gap:6px; color:#90a39a; font-size:.7rem; }
+    .available::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--mint); box-shadow:0 0 10px #77e1c4aa; }
+    h2 { margin:13px 0 7px; font-size:1.35rem; letter-spacing:-.025em; }
+    .card-copy { min-height:50px; margin:0 0 18px; color:var(--muted); font-size:.88rem; line-height:1.55; }
+    .feature-list { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 22px; padding:0; list-style:none; }
+    .feature-list li { padding:5px 8px; border-radius:7px; color:#c3d0c9; background:#ffffff08; font-size:.68rem; }
+    .launch { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-top:auto; padding:13px 15px; border:1px solid #77e1c466; border-radius:11px; color:#eafff8; background:linear-gradient(110deg,#1c5548,#173b37); font-family:inherit;font-size:.88rem;font-weight:700; text-decoration:none; transition:background .15s ease,transform .15s ease; }
+    .launch:hover { background:linear-gradient(110deg,#246957,#1d4a43); transform:translateY(-1px); }
+    .launch span { color:var(--mint); font-size:1.2rem; }
+    .note { margin:28px auto 0; color:#85958e; font-size:.78rem; text-align:center; }
+    .footer { display:flex; justify-content:space-between; gap:12px; margin-top:56px; padding-top:18px; border-top:1px solid #ffffff12; color:#718079; font-size:.72rem; }
+    @media (max-width:720px) {
+      .shell { width:min(100% - 24px, 520px); padding-top:14px; }
+      .header { padding-bottom:15px; }.edition { font-size:.68rem; }
+      .hero { margin:36px auto 25px; }
+      .cards { grid-template-columns:1fr; gap:14px; }
+      .device-card { padding:15px; border-radius:18px; }
+      .device-art { min-height:200px; }
+      .phone-art { transform:scale(.85) rotate(-7deg); }.tower-art { transform:scale(.85) rotate(4deg); }
+      .card-copy { min-height:0; }
+      .footer { margin-top:32px; flex-direction:column; }
+    }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <a class="brand" href="index.html" aria-label="Kingdog Electronics, inicio">
+        <span class="brand-mark">KD</span>
+        <span class="brand-title">Kingdog<span>·</span>Electronics</span>
+      </a>
+      <span class="edition">Taller interactivo · 2 simuladores</span>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Aprende desmontando</div>
+        <h1>¿Qué dispositivo quieres explorar?</h1>
+        <p class="intro">Elige un modelo para abrir su simulador. Sigue el desmontaje guiado, explora libremente y vuelve a montar cada pieza; puedes regresar a esta selección desde el botón de cuadrícula.</p>
+      </section>
+      <section class="cards" aria-label="Dispositivos disponibles">
+        <article class="device-card">
+          <div class="device-art" aria-hidden="true">
+            <div class="art-light"></div>
+            <div class="phone-art"><div class="phone-glass"></div></div>
+          </div>
+          <div class="card-top"><span class="tag">Móvil · 15 módulos</span><span class="available">Disponible</span></div>
+          <h2>Smartphone modular</h2>
+          <p class="card-copy">Explora pantalla, batería, cámaras, placas, sensores y conexiones flex en un teléfono didáctico.</p>
+          <ul class="feature-list"><li>26 pasos</li><li>14 tornillos</li><li>6 conectores</li></ul>
+          <a class="launch" href="smartphone.html"><span>Abrir simulador del teléfono</span><span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="device-card">
+          <div class="device-art" aria-hidden="true">
+            <div class="art-light"></div>
+            <div class="tower-art"><div class="tower-sidepanel"></div><div class="tower-front"></div></div>
+          </div>
+          <div class="card-top"><span class="tag">PC de escritorio · torre</span><span class="available">Disponible</span></div>
+          <h2>Torre de PC</h2>
+          <p class="card-copy">Desarma y rearma una torre con placa base, GPU, memoria RAM, procesador, refrigeración, ventiladores y fuente de poder.</p>
+          <ul class="feature-list"><li>26 pasos</li><li>23 tornillos</li><li>7 conexiones</li></ul>
+          <a class="launch" href="pc.html"><span>Abrir simulador de la torre</span><span aria-hidden="true">↗</span></a>
+        </article>
+      </section>
+      <p class="note">Los dos simuladores son modelos didácticos; la disposición real de componentes puede variar según el equipo.</p>
+    </main>
+    <footer class="footer"><span>Kingdog · Electronics lab</span><span>Usa el ratón o la pantalla táctil</span></footer>
+  </div>
+</body>
+</html>

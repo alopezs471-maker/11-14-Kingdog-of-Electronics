@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101619">
+  <title>Kingdog · Torre de PC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script defer src="pc.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#0b1012;--bg-2:#101719;--panel:#151e20;--panel-border:#2c393b;
+      --text:#ecf2ed;--text-dim:#9aa9a1;--cyan:#73dbc0;--amber:#e7b457;
+      --red:#e36b56;--green:#4ed594;--shadow:#000b;--board:#327b55;
+      --case-width:340px;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100svh; background:var(--bg); color:var(--text); font-family:'Space Grotesk',Inter,system-ui,sans-serif; }
+    button,a { font:inherit; }
+    .pc-app { display:flex; flex-direction:column; min-height:100svh; height:100svh; overflow:hidden; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid var(--panel-border); background:var(--panel); z-index:30; }
+    .brand { min-width:0; }
+    .brand h1 { margin:0; font-size:1.04rem; font-weight:700; letter-spacing:.01em; }
+    .brand h1 span { color:var(--cyan); }
+    .brand p { margin:2px 0 0; color:var(--text-dim); font-size:.7rem; }
+    .top-controls { display:flex; align-items:center; justify-content:flex-end; gap:7px; flex-wrap:wrap; }
+    .step-pill { padding:5px 9px; border:1px solid var(--panel-border); border-radius:999px; background:#26312e; color:var(--text-dim); font:600 .68rem/1.2 'JetBrains Mono',monospace; white-space:nowrap; }
+    .icon-btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:7px 10px; border:1px solid var(--panel-border); border-radius:8px; background:#202a2b; color:var(--text); font-size:.72rem; cursor:pointer; text-decoration:none; transition:border-color .15s ease,transform .08s ease; }
+    .icon-btn:hover { border-color:var(--cyan); }
+    .icon-btn:active { transform:scale(.97); }
+    .icon-btn svg { width:14px; height:14px; flex:none; }
+    .icon-btn.icon-only { padding:7px 9px; }
+    .main { display:grid; grid-template-columns:minmax(0,1fr) 230px; flex:1; min-height:0; }
+    .workbench { position:relative; container-type:size; display:flex; align-items:center; justify-content:center; min-width:0; min-height:0; padding:64px 16px 22px; overflow:hidden; background:repeating-linear-gradient(0deg,transparent 0 27px,#ffffff08 28px),repeating-linear-gradient(90deg,transparent 0 27px,#ffffff08 28px),#101719; background-size:28px 28px; }
+    .message-bar { position:absolute; z-index:20; top:12px; left:50%; width:min(700px,calc(100% - 28px)); min-height:34px; padding:8px 14px; border:1px solid var(--panel-border); border-radius:9px; background:#182123ed; color:var(--text-dim); font:500 .72rem/1.45 'JetBrains Mono',monospace; text-align:center; transform:translateX(-50%); box-shadow:0 7px 18px #0005; }
+    .message-bar strong { color:var(--amber); }
+    .case-stage { position:relative; isolation:isolate; width:min(35vw,340px); aspect-ratio:9 / 14; border-radius:17px; filter:drop-shadow(0 18px 28px var(--shadow)); }
+    @supports (width:1cqh) { .case-stage { width:min(35vw,340px,48cqh); } }
+    .case-shell { position:absolute; z-index:0; inset:0; overflow:hidden; border:5px solid #77817b; border-radius:15px; background:linear-gradient(145deg,#293233,#101617 32%,#252c2c 72%,#101415); box-shadow:inset 0 0 0 3px #111718,inset 0 0 22px #000b; }
+    .case-shell::before { content:""; position:absolute; inset:2.5%; border:1px solid #b6c0b73b; border-radius:7px; box-shadow:inset 0 0 0 4px #080b0c88; }
+    .case-shell::after { content:"ATX MID-TOWER · 2026"; position:absolute; left:5%; right:5%; bottom:1.8%; color:#aeb9b288; font:600 clamp(5px,1.2vw,7px)/1 'JetBrains Mono',monospace; letter-spacing:.1em; text-align:center; pointer-events:none; }
+    .inner-rail { position:absolute; z-index:1; top:5%; bottom:5%; left:10%; width:4%; border:1px solid #89948b88; border-radius:4px; background:linear-gradient(90deg,#1b2222,#9ba69b 40%,#303837); box-shadow:0 0 0 3px #101515; }
+    .motherboard { z-index:2; top:9%; left:15%; width:69%; height:74%; overflow:hidden; border:2px solid #9baf9b; border-radius:7px; background:repeating-linear-gradient(0deg,transparent 0 13px,#b9d2ab16 14px 15px),repeating-linear-gradient(90deg,transparent 0 15px,#b9d2ab10 16px 17px),linear-gradient(145deg,#276447,#16442f 56%,#1c573a); box-shadow:inset 0 0 0 3px #0b2419,inset 0 0 17px #07170eaa,0 4px 9px #0008; }
+    .board-edge { position:absolute; top:9%; bottom:9%; right:5%; width:10%; border-left:2px solid #c3a757; background:repeating-linear-gradient(0deg,#ddb95b 0 2px,transparent 2px 7px); opacity:.8; }
+    .board-chip { position:absolute; border:2px solid #8c9891; border-radius:4px; background:linear-gradient(145deg,#303b3b,#0f1717 60%,#515b58); box-shadow:inset 0 0 0 2px #111717,1px 2px 4px #0009; }
+    .board-chip.one { left:12%; top:12%; width:18%; height:11%; }
+    .board-chip.two { left:37%; bottom:12%; width:24%; height:12%; }
+    .board-chip.three { right:17%; top:42%; width:15%; height:10%; }
+    .board-port { position:absolute; right:0; top:13%; width:13%; height:41%; border:1px solid #afb8b1; border-right:0; border-radius:4px 0 0 4px; background:repeating-linear-gradient(0deg,#38413f 0 8px,#9ca79d 9px 10px); }
+    .board-socket { position:absolute; left:25%; top:29%; width:25%; height:25%; border:4px solid #bfcbad; border-radius:5px; background:repeating-linear-gradient(0deg,#a9ad9466 0 2px,transparent 2px 5px),linear-gradient(145deg,#3a4138,#111817); box-shadow:inset 0 0 0 3px #17241c,0 0 0 1px #101613; }
+    .dimm-slot { position:absolute; right:19%; width:9%; height:37%; border:1px solid #bea85c; border-radius:3px; background:linear-gradient(90deg,#1a1f1a,#9d843c,#1a211b); }
+    .dimm-slot.a { top:13%; }.dimm-slot.b { top:53%; }
+    .sata-ports { position:absolute; right:4%; bottom:6%; width:17%; height:12%; border:1px solid #ddb65a; border-radius:2px; background:repeating-linear-gradient(90deg,#d6b759 0 2px,#28322a 2px 6px); }
+    .cpu { z-index:5; left:29%; top:33%; width:17%; height:17%; border:4px solid #c5cbb3; border-radius:5px; background:radial-gradient(circle,#8aa2a2 0 7%,#243639 17%,#101819 63%,#555f59 70%,#171e1b 78%); box-shadow:inset 0 0 0 3px #101615,0 3px 6px #000a; }
+    .cpu::after { content:"CPU"; position:absolute; inset:0; display:grid; place-items:center; color:#d4dfd6aa; font:700 clamp(5px,1vw,8px)/1 'JetBrains Mono',monospace; }
+    .cpu-cooler { z-index:12; left:21%; top:25%; width:34%; aspect-ratio:1; border:3px solid #7e8985; border-radius:50%; background:radial-gradient(circle,#c9d0c4 0 5%,#252c2b 7% 12%,transparent 14%),repeating-conic-gradient(from 0deg,#161c1e 0 12deg,#56605e 13deg 18deg,#242b2b 19deg 30deg); box-shadow:inset 0 0 0 5px #111718,inset 0 0 0 10px #75817d,0 5px 9px #000a; }
+    .cpu-cooler::before { content:""; position:absolute; inset:18%; border:2px solid #a9b4a9; border-radius:50%; background:radial-gradient(circle,#9ca9a1 0 15%,#293331 18% 40%,#111718 44%); box-shadow:0 0 0 3px #151b1c; }
+    .cooler-blades { position:absolute; inset:14%; border-radius:50%; background:repeating-conic-gradient(from 12deg,transparent 0 25deg,#c6d1c51c 26deg 31deg,transparent 32deg 45deg); }
+    .ram { z-index:9; top:18%; width:8%; height:28%; border:2px solid #c2a85e; border-radius:4px; background:linear-gradient(90deg,#18251c,#678044 28%,#b0bd75 48%,#384c35 75%,#18231a); box-shadow:inset 0 0 0 2px #1b271e,0 3px 5px #0009; }
+    .ram::before { content:""; position:absolute; left:13%; right:13%; top:13%; height:18%; border:1px solid #cbd5a5aa; background:#222d21; }
+    .ram::after { content:""; position:absolute; left:10%; right:10%; bottom:-5px; height:5px; background:repeating-linear-gradient(90deg,#d5bd63 0 3px,#5e5733 3px 6px); }
+    #ram1 { right:23%; }.ram2 { right:12%; }
+    .ssd { z-index:8; left:26%; top:54%; width:42%; height:7%; border:2px solid #737d77; border-radius:5px; background:linear-gradient(100deg,#101718,#3b4643 30%,#1b2322 68%,#555e59); box-shadow:inset 0 0 0 2px #161c1c,0 3px 5px #0009; }
+    .ssd::before { content:"M.2 NVMe"; position:absolute; left:12%; top:27%; color:#ccd4c8aa; font:600 clamp(5px,.95vw,7px)/1 'JetBrains Mono',monospace; }
+    .gpu { z-index:14; left:18%; top:63%; width:68%; height:16%; border:2px solid #9ba5a0; border-radius:8px; background:linear-gradient(150deg,#293232,#121819 38%,#596260 51%,#1d2525 67%,#111617); box-shadow:inset 0 0 0 3px #151a1b,0 6px 11px #000b; }
+    .gpu::before { content:"KINGDOG · RTX"; position:absolute; right:5%; top:10%; color:#d6dfd799; font:700 clamp(5px,.95vw,8px)/1 'JetBrains Mono',monospace; letter-spacing:.06em; }
+    .gpu-fan { position:absolute; top:26%; width:32%; aspect-ratio:1; border:2px solid #8a9591; border-radius:50%; background:repeating-conic-gradient(#242b2b 0 13deg,#6e7973 14deg 22deg,#242b2b 23deg 45deg); box-shadow:inset 0 0 0 4px #171c1d; }
+    .gpu-fan::after { content:""; position:absolute; inset:31%; border:2px solid #a6b0a8; border-radius:50%; background:radial-gradient(circle,#66716b,#182020 65%); }
+    .gpu-fan.f1 { left:5%; }.gpu-fan.f2 { left:36%; }.gpu-fan.f3 { left:67%; }
+    .gpu-contacts { position:absolute; left:21%; bottom:-3px; width:54%; height:6px; border:1px solid #79683c; background:repeating-linear-gradient(90deg,#dab85e 0 5px,#433b25 5px 8px); }
+    .psu { z-index:6; left:17%; bottom:3%; width:67%; height:15%; border:2px solid #909a95; border-radius:7px; background:linear-gradient(135deg,#333a39,#151a1a 48%,#535a58); box-shadow:inset 0 0 0 3px #161b1b,0 4px 8px #0008; }
+    .psu-grill { position:absolute; left:8%; top:14%; width:37%; height:72%; border:2px solid #929c96; border-radius:50%; background:repeating-conic-gradient(#1a2020 0 10deg,#89938b 11deg 14deg,#1a2020 15deg 30deg); box-shadow:inset 0 0 0 4px #171d1d; }
+    .psu-grill::after { content:""; position:absolute; inset:35%; border-radius:50%; background:#68736c; }
+    .psu-label { position:absolute; left:51%; top:25%; color:#c6d0c6a8; font:600 clamp(5px,.9vw,7px)/1.5 'JetBrains Mono',monospace; }
+    .fan { z-index:10; width:19%; aspect-ratio:1; border:3px solid #87928c; border-radius:50%; background:repeating-conic-gradient(#212828 0 16deg,#7b8580 17deg 22deg,#212828 23deg 45deg); box-shadow:inset 0 0 0 4px #141a1a,0 4px 7px #0009; }
+    .fan::after { content:""; position:absolute; inset:34%; border:2px solid #99a49a; border-radius:50%; background:radial-gradient(circle,#89938c,#182020 68%); }
+    .front-fan { right:4%; top:13%; }.rear-fan { left:3%; top:13%; width:18%; }
+    .side-panel { z-index:50; inset:0; overflow:hidden; border:4px solid #9aa49d; border-radius:12px; background:repeating-linear-gradient(115deg,transparent 0 17px,#ffffff0b 18px 19px),linear-gradient(145deg,#59625f 0%,#303938 32%,#202827 68%,#48514e 100%); box-shadow:inset 0 0 0 3px #151a1b,inset 0 0 24px #0008,0 5px 12px #0009; }
+    .side-panel::before { content:""; position:absolute; inset:5%; border:1px solid #c9d2ce77; border-radius:6px; background:linear-gradient(145deg,#ffffff0b,#10161716); box-shadow:inset 0 0 0 1px #0b1011; }
+    .side-panel::after { content:"MATTE STEEL · MID TOWER"; position:absolute; left:7%; right:7%; bottom:6%; color:#edf2edcc; font:600 clamp(6px,1vw,8px)/1 'JetBrains Mono',monospace; letter-spacing:.1em; text-align:center; }
+    .component { position:absolute; cursor:grab; touch-action:none; user-select:none; transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s ease,box-shadow .18s ease; }
+    .component:active { cursor:grabbing; }
+    .component.part-removed { opacity:0; pointer-events:none; }
+    .part-mark { position:absolute; z-index:2; left:5px; bottom:4px; color:#f1f4efaa; font:600 clamp(5px,1.2vw,7px)/1 'JetBrains Mono',monospace; letter-spacing:.07em; pointer-events:none; white-space:nowrap; }
+    .part-mark { display:none; }
+    .screw { position:absolute; z-index:75; width:clamp(19px,6%,30px); aspect-ratio:1; border:2px solid #c0c8bf; border-radius:50%; background:radial-gradient(circle,#343b38 0 30%,#a6afa6 36% 46%,#414846 52%); box-shadow:0 1px 3px #000b; cursor:pointer; touch-action:none; transition:opacity .2s ease,transform .2s ease; }
+    .screw::before { content:""; position:absolute; left:21%; right:21%; top:44%; height:2px; background:#161a19; transform:rotate(-28deg); }
+    .screw.gone { opacity:0; pointer-events:none; transform:scale(.55); }
+    .side-panel .screw { width:clamp(20px,7%,27px); border:2px solid #d9e0da; background:radial-gradient(circle at 34% 28%,#f1f4eb,#aeb8b3 43%,#394346 77%); box-shadow:inset 0 0 0 2px #273033,0 2px 4px #000c,0 0 0 1px #edf3eb88; }
+    .side-panel .screw.gone { opacity:1; pointer-events:auto; transform:none; background:radial-gradient(circle,#080d0f 0 24%,#323c40 29% 44%,#c3cecd 49% 57%,#20292c 62% 100%); box-shadow:inset 0 0 0 2px #0c1214,0 1px 4px #000c,0 0 0 1px #e3ece766; }
+    .side-panel .screw.gone::before { left:35%; right:35%; top:35%; height:30%; border-radius:50%; background:#080d0f; transform:none; box-shadow:0 0 0 1px #758184; }
+    .screw.spinning::after { content:""; position:absolute; inset:-4px; border:2px solid transparent; border-top-color:var(--amber); border-radius:50%; animation:spin .55s linear infinite; }
+    .screw.reverse.spinning::after { animation-direction:reverse; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .connector { position:absolute; z-index:32; width:clamp(20px,8%,34px); height:clamp(12px,4%,19px); border:2px solid #dcc16d; border-radius:5px; background:linear-gradient(90deg,#f1dc90,#996b35 35%,#39291b); box-shadow:0 2px 5px #000a; cursor:crosshair; touch-action:none; transition:filter .18s,opacity .18s; }
+    .connector::after { content:""; position:absolute; inset:3px 22%; border-radius:2px; background:repeating-linear-gradient(90deg,#171c1b 0 2px,#d9bb68 2px 3px); }
+    .connector.disconnected { filter:grayscale(1); opacity:.48; }
+    .connector.centered { transform:translateX(-50%); }
+    .connector:focus-visible,.screw:focus-visible { outline:2px solid var(--cyan); outline-offset:3px; }
+    #gpuPowerConnector { left:77%; top:62%; }
+    #coolerFanConnector { left:49%; top:25%; }
+    #cpuSocketConnector { left:36%; top:44%; }
+    #frontFanConnector { right:13%; top:33%; }
+    #rearFanConnector { left:16%; top:32%; }
+    #epsConnector { left:54%; top:13%; }
+    #atxConnector { left:73%; top:47%; }
+    .tray-panel { display:flex; flex-direction:column; gap:10px; min-width:0; padding:14px 12px; border-left:1px solid var(--panel-border); background:var(--panel); }
+    .tray-panel h2 { margin:0; color:var(--text-dim); font-size:.7rem; letter-spacing:.04em; }
+    .tray-list { display:flex; flex-direction:column; gap:7px; overflow:auto; min-height:0; }
+    .tray-empty { color:var(--text-dim); font-size:.73rem; font-style:italic; }
+    .tray-item { display:flex; align-items:center; gap:7px; min-width:max-content; padding:7px 8px; border:1px solid var(--panel-border); border-radius:8px; background:var(--bg-2); font-size:.7rem; }
+    .tray-item .swatch { width:11px; height:11px; flex:none; border-radius:3px; }
+    .tray-item .count { margin-left:auto; color:var(--text-dim); }
+    .tray-item.piece { cursor:grab; touch-action:none; }
+    .tray-item.piece:hover { border-color:var(--cyan); }
+    .tray-panel.drop-ok { box-shadow:inset 0 0 0 2px var(--green); }
+    .workbench.drop-active::after { content:'SUELTA EN LA MESA O EN LA BANDEJA'; position:absolute; z-index:25; bottom:8px; left:50%; transform:translateX(-50%); padding:5px 9px; border:1px dashed var(--cyan); border-radius:999px; color:var(--text); background:var(--panel); font:600 .6rem 'JetBrains Mono',monospace; white-space:nowrap; pointer-events:none; }
+    .slot-ok { box-shadow:0 0 0 3px var(--green),0 0 18px #4ed59499!important; }
+    .slot-bad,.blocker-flash { box-shadow:0 0 0 3px var(--red),0 0 18px #e36b5688!important; }
+    .blocked-shake { animation:shake .22s linear 2; }
+    @keyframes shake { 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+    .xray-target { animation:hintPulse 1s ease-in-out infinite alternate; }
+    @keyframes hintPulse { to { filter:drop-shadow(0 0 8px var(--amber)); } }
+    .drag-ghost { position:fixed!important; z-index:1000!important; pointer-events:none!important; margin:0!important; }
+    .toolbar { display:flex; justify-content:center; align-items:center; gap:9px; flex-wrap:wrap; padding:8px 12px; border-top:1px solid var(--panel-border); background:var(--panel); }
+    .tool-btn { position:relative; display:flex; align-items:center; gap:7px; min-width:58px; padding:7px 9px; border:1px solid var(--panel-border); border-radius:9px; background:var(--bg-2); color:var(--text-dim); font-size:.7rem; cursor:pointer; }
+    .tool-btn.selected { border-color:var(--cyan); color:var(--text); box-shadow:inset 0 0 0 1px var(--cyan); }
+    .tool-btn svg { width:18px; height:18px; }
+    .tool-btn kbd { color:var(--text-dim); font: .55rem 'JetBrains Mono',monospace; }
+    .overlay { position:fixed; z-index:100; inset:0; display:none; place-items:center; padding:20px; background:#060a0bc9; backdrop-filter:blur(5px); }
+    .overlay.show { display:grid; }
+    .overlay-card { width:min(390px,100%); padding:23px; border:1px solid var(--panel-border); border-radius:17px; background:var(--panel); text-align:center; box-shadow:0 20px 70px #000b; }
+    .overlay-card h2 { margin:0 0 10px; }.overlay-card p { margin:0 0 17px; color:var(--text-dim); line-height:1.5; font-size:.86rem; }
+    .overlay-actions { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
+    .info-tooltip { position:fixed; z-index:1200; display:flex; flex-direction:column; gap:4px; width:max-content; max-width:min(270px,calc(100vw - 24px)); padding:9px 11px; border:1px solid #73dbc077; border-radius:10px; background:#172122f5; color:var(--text); box-shadow:0 8px 24px #0009; font-size:.76rem; line-height:1.4; pointer-events:none; opacity:0; visibility:hidden; transform:translateY(4px); transition:opacity .12s ease,transform .12s ease,visibility .12s ease; }
+    .info-tooltip.visible { opacity:1; visibility:visible; transform:translateY(0); }.info-tooltip strong { color:var(--cyan); }.info-tooltip span { color:var(--text-dim); }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+    @media (max-width:760px) {
+      .topbar { align-items:flex-start; padding:8px 10px; }.brand p { display:none; }.top-controls { gap:5px; }.icon-btn { padding:6px 7px; font-size:.65rem; }.step-pill { padding:4px 7px; font-size:.6rem; }
+      .main { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr) auto; }.workbench { padding:51px 8px 15px; }.case-stage { width:min(67vw,310px); }
+      .tray-panel { flex-direction:row; align-items:center; max-height:88px; padding:8px 10px; border-left:0; border-top:1px solid var(--panel-border); }.tray-panel h2 { display:none; }.tray-list { flex-direction:row; overflow:auto; }.tray-item { flex:none; }
+      .toolbar { gap:6px; padding:7px; }.tool-btn { min-width:0; padding:6px 8px; }.tool-btn kbd { display:none; }
+    }
+    @media (max-width:760px) and (orientation:landscape) {
+      .main { grid-template-columns:minmax(0,1fr) 150px; grid-template-rows:minmax(0,1fr); }.tray-panel { flex-direction:column; align-items:stretch; max-height:none; border-left:1px solid var(--panel-border); border-top:0; }.tray-panel h2 { display:block; }.tray-list { flex-direction:column; }.case-stage { width:min(36vw,240px,45vh); }.topbar { padding:5px 8px; }.toolbar { padding:5px; }
+    }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; animation-duration:.01ms!important; } }
+  </style>
+</head>
+<body>
+<div class="pc-app" id="pcApp" data-tool="destornillador">
+  <header class="topbar">
+    <div class="brand"><h1>Kingdog<span>·</span>Electronics</h1><p id="modeLabel">Torre ATX modular · guía de 26 pasos</p></div>
+    <div class="top-controls">
+      <a class="icon-btn icon-only" href="index.html" title="Elegir otro dispositivo" aria-label="Volver a elegir dispositivo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </a>
+      <span class="step-pill" id="goalPill">Desarmar</span><span class="step-pill" id="stepPill">0/26</span><span class="step-pill" id="timerPill">00:00</span>
+      <button class="icon-btn" id="modeBtn" aria-pressed="true">Modo Guía</button>
+      <button class="icon-btn" id="hintBtn" title="Resaltar la siguiente acción (H)" aria-pressed="false">Pistas</button>
+      <button class="icon-btn" id="pauseBtn">Pausar</button>
+      <button class="icon-btn" id="resetBtn">Reiniciar</button>
+      <button class="icon-btn icon-only" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
+    </div>
+  </header>
+  <main class="main">
+    <section class="workbench" id="workbench">
+      <div class="message-bar" id="messageBar" role="status" aria-live="polite">Quita los tornillos del panel lateral con el destornillador.</div>
+      <div class="case-stage" id="caseStage" aria-label="Modelo didáctico de torre de PC abierta">
+        <div class="case-shell"><div class="inner-rail"></div></div>
+        <div class="component motherboard" id="motherboard" aria-label="Placa base ATX">
+          <div class="board-edge"></div><div class="board-chip one"></div><div class="board-chip two"></div><div class="board-chip three"></div>
+          <div class="board-port"></div><div class="board-socket"></div><div class="dimm-slot a"></div><div class="dimm-slot b"></div><div class="sata-ports"></div>
+          <div class="screw" id="screw-mobo-a" style="top:5%;left:4%"></div><div class="screw" id="screw-mobo-b" style="top:5%;right:4%"></div>
+          <div class="screw" id="screw-mobo-c" style="top:48%;left:4%"></div><div class="screw" id="screw-mobo-d" style="top:48%;right:4%"></div>
+          <div class="screw" id="screw-mobo-e" style="bottom:5%;left:4%"></div><div class="screw" id="screw-mobo-f" style="bottom:5%;right:4%"></div>
+        </div>
+        <div class="component rear-fan fan" id="rearFan" aria-label="Ventilador trasero de extracción">
+          <div class="screw" id="screw-rear-a" style="top:0;left:0"></div><div class="screw" id="screw-rear-b" style="bottom:0;right:0"></div>
+        </div>
+        <div class="component front-fan fan" id="frontFan" aria-label="Ventilador frontal de entrada">
+          <div class="screw" id="screw-front-a" style="top:0;left:0"></div><div class="screw" id="screw-front-b" style="bottom:0;right:0"></div>
+        </div>
+        <div class="component cpu" id="cpu" aria-label="Procesador en socket AM5"></div>
+        <div class="component ssd" id="ssd" aria-label="Unidad SSD M.2 NVMe">
+          <div class="screw" id="screw-ssd-a" style="right:-7%;top:10%"></div>
+        </div>
+        <div class="component ram" id="ram1" aria-label="Módulo de memoria RAM A">
+        </div>
+        <div class="component ram ram2" id="ram2" aria-label="Módulo de memoria RAM B">
+        </div>
+        <div class="component psu" id="psu" aria-label="Fuente de poder ATX">
+          <div class="psu-grill"></div><div class="psu-label">80 PLUS GOLD<br>750 W · ATX 3.1</div>
+          <div class="screw" id="screw-psu-a" style="top:8%;left:4%"></div><div class="screw" id="screw-psu-b" style="top:8%;right:4%"></div>
+          <div class="screw" id="screw-psu-c" style="bottom:8%;left:4%"></div><div class="screw" id="screw-psu-d" style="bottom:8%;right:4%"></div>
+        </div>
+        <div class="component gpu" id="gpu" aria-label="Tarjeta gráfica de tres ventiladores">
+          <div class="gpu-fan f1"></div><div class="gpu-fan f2"></div><div class="gpu-fan f3"></div><div class="gpu-contacts"></div>
+          <div class="screw" id="screw-gpu-a" style="top:0;left:7%"></div><div class="screw" id="screw-gpu-b" style="top:0;right:7%"></div>
+        </div>
+        <div class="component cpu-cooler" id="cooler" aria-label="Disipador y ventilador del procesador"><div class="cooler-blades"></div>
+          <div class="screw" id="screw-cooler-a" style="top:0;left:0"></div><div class="screw" id="screw-cooler-b" style="top:0;right:0"></div><div class="screw" id="screw-cooler-c" style="bottom:0;left:0"></div><div class="screw" id="screw-cooler-d" style="bottom:0;right:0"></div>
+        </div>
+        <div class="connector" id="gpuPowerConnector" role="button" tabindex="0" aria-label="Conector de alimentación de la tarjeta gráfica, conectado" aria-pressed="true"></div>
+        <div class="connector" id="coolerFanConnector" role="button" tabindex="0" aria-label="Conector del ventilador del procesador, conectado" aria-pressed="true"></div>
+        <div class="connector" id="cpuSocketConnector" role="button" tabindex="0" aria-label="Palanca de retención del procesador, bloqueada" aria-pressed="true"></div>
+        <div class="connector" id="frontFanConnector" role="button" tabindex="0" aria-label="Conector del ventilador frontal, conectado" aria-pressed="true"></div>
+        <div class="connector" id="rearFanConnector" role="button" tabindex="0" aria-label="Conector del ventilador trasero, conectado" aria-pressed="true"></div>
+        <div class="connector" id="epsConnector" role="button" tabindex="0" aria-label="Conector EPS de alimentación del procesador, conectado" aria-pressed="true"></div>
+        <div class="connector" id="atxConnector" role="button" tabindex="0" aria-label="Conector ATX de 24 pines, conectado" aria-pressed="true"></div>
+        <div class="component side-panel" id="sidePanel" aria-label="Panel lateral opaco de acero">
+          <div class="screw" id="screw-panel-a" style="top:4%;right:4%"></div><div class="screw" id="screw-panel-b" style="bottom:4%;right:4%"></div>
+        </div>
+      </div>
+    </section>
+    <aside class="tray-panel"><h2>PIEZAS RETIRADAS</h2><div class="tray-list" id="trayList"><div class="tray-empty" id="trayEmpty">Aquí aparecerán los módulos y tornillos.</div></div></aside>
+  </main>
+  <nav class="toolbar" aria-label="Herramientas">
+    <button class="tool-btn selected" data-tool="destornillador" id="toolScrewdriver" aria-pressed="true"><span>🔧</span><kbd>1</kbd><span>Destornillador</span></button>
+    <button class="tool-btn" data-tool="espatula" id="toolSpatula" aria-pressed="false"><span>⛏</span><kbd>2</kbd><span>Espátula</span></button>
+    <button class="tool-btn" data-tool="mano" id="toolHand" aria-pressed="false"><span>✋</span><kbd>3</kbd><span>Mano libre</span></button>
+  </nav>
+</div>
+<div class="overlay" id="pauseOverlay"><div class="overlay-card"><h2>Simulación en pausa</h2><p>El estado del equipo se conserva.</p><button class="icon-btn" id="resumeBtn">Continuar</button></div></div>
+<div class="overlay" id="successOverlay"><div class="overlay-card"><h2 id="successTitle">Torre desmontada</h2><p id="successText">Todas las piezas están en la mesa.</p><p id="successStats"></p><div class="overlay-actions"><button class="icon-btn" id="playAgainBtn">Volver a armar</button><button class="icon-btn" id="restartBtn" hidden>Empezar de nuevo</button></div></div></div>
+<div class="info-tooltip" id="infoTooltip" role="tooltip" aria-hidden="true"><strong id="infoTooltipTitle"></strong><span id="infoTooltipBody"></span></div>
+</body>
+</html>
