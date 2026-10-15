@@ -10,7 +10,7 @@ El proyecto no requiere instalación ni compilación. Para abrirlo, se puede car
 python3 -m http.server 4173
 ```
 
-Después, se debe visitar `http://localhost:4173/`. La página inicial permite elegir el simulador y regresar al selector desde el botón de cuadrícula. También es posible abrir directamente `smartphone.html` o `pc.html`.
+Después, se debe visitar `http://localhost:4173/`. La página inicial permite elegir el simulador y regresar al selector desde el botón. También es posible abrir directamente `celular.html` o `pc.html`.
 
 ## Simuladores disponibles
 
