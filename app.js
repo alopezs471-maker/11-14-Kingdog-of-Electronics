@@ -1,13 +1,13 @@
 (function(){
   "use strict";
 
-  /* =====================================================================
+  /* 
    *  Kingdog · Simulador de reparación de smartphone modular
    *  Desmontaje y montaje guiados de 15 módulos, 6 flexes y 14 tornillos.
    *  Las piezas encajan por capas y muestran en rojo sus bloqueos activos.
-   * ===================================================================== */
+  */
 
-  // ---------- Utilidades ----------
+  // Utilidades 
   var store = {
     get: function(k, d){ try { var v = localStorage.getItem(k); return v === null ? d : v; } catch(e){ return d; } },
     set: function(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
@@ -37,7 +37,7 @@
   var CONNECTOR_KEYS = ['battery', 'camera', 'topSensors', 'sideFlex', 'interconnect', 'display'];
   var HOLD_MS = 550;
 
-  // ---------- Estado ----------
+  // Estado 
   var state = {
     tool: 'destornillador',
     goal: 'desarmar',
@@ -102,7 +102,7 @@
     display: $('displayConnector')
   };
 
-  // ---------- Audio ----------
+  // Audio 
   var audioCtx = null;
   function getCtx(){
     if (!audioCtx) {
@@ -140,7 +140,7 @@
   function sndError(){ beep(160, 0.22, 'sawtooth', 0.05, 90); }
   function sndWin(){ [523, 659, 784, 1047].forEach(function(f, i){ beep(f, 0.18, 'triangle', 0.06, null, i * 0.11); }); }
 
-  // ---------- Mensajes ----------
+  // Mensajes 
   var flashTimer = null;
   function setMessage(html){ els.messageBar.innerHTML = html; }
   // Mensaje temporal (errores, avisos). Luego vuelve al mensaje del paso actual.
@@ -150,7 +150,7 @@
     flashTimer = setTimeout(function(){ flashTimer = null; updateHUD(); }, ms || 2600);
   }
 
-  // ---------- Modelo modular y reglas de bloqueo ----------
+  // Modelo modular y reglas de bloqueo
   var SCREW_LABELS = {
     cover: 'la tapa trasera',
     mainboard: 'la placa base',
@@ -552,7 +552,7 @@
     }
   };
 
-  // ---------- Guía completa de desmontaje y montaje ----------
+  // Guía completa de desmontaje y montaje
   function partStep(id, installing, message){
     return {
       done: function(){ return state.installed[id] === installing; },
@@ -684,7 +684,7 @@
     steps[idx].targets().forEach(function(el){ if (el) el.classList.add('xray-target'); });
   }
 
-  // ---------- Cronómetro y estadísticas ----------
+  // Cronómetro y estadísticas
   function startClock(){
     if (state.started || state.finished) return;
     state.started = true;
@@ -702,7 +702,7 @@
 
   function registerError(){ state.errors++; }
 
-  // ---------- Bandeja (mesa de trabajo) ----------
+  // Bandeja (mesa de trabajo) 
   var trayItems = {};
   function trayEl(id){ return trayItems[id] || null; }
 
@@ -761,7 +761,7 @@
     refreshTrayEmpty();
   }
 
-  // ---------- Feedback visual ----------
+  // Feedback visual 
   function flashBlocked(el){
     registerError();
     el.classList.remove('blocked-shake');
@@ -778,7 +778,7 @@
     });
   }
 
-  // ---------- Herramientas ----------
+  // Herramientas
   function selectTool(tool){
     state.tool = tool;
     els.app.setAttribute('data-tool', tool);
@@ -796,7 +796,7 @@
     })(toolBtns[tb]);
   }
 
-  // ---------- Tornillos (mantener presionado) ----------
+  // Tornillos (mantener presionado)
   function attachScrew(id, el){
     var holdTimer = null;
     var holding = false;
@@ -848,7 +848,7 @@
   }
   SCREW_IDS.forEach(function(id){ attachScrew(id, screwEls[id]); });
 
-  // ---------- Espátula: conectores flex y coaxiales ----------
+  // Espátula: conectores flex y coaxiales
   function connectorAccessBlock(key){
     if (state.installed.cover) return 'Quita primero la tapa trasera para acceder a los conectores.';
     if (key === 'battery' && (!state.installed.battery || !state.installed.mainboard)) return 'La batería y la placa base deben estar colocadas.';
@@ -894,7 +894,7 @@
     });
   });
 
-  // ---------- Arrastrar piezas (Mano Libre) ----------
+  // Arrastrar piezas (Mano Libre)
   var carrying = null;
 
   function makeGhost(el, rect){
@@ -1116,7 +1116,7 @@
   }
   Object.keys(parts).forEach(makeDraggable);
 
-  // ---------- Después de cada cambio ----------
+  // Después de cada cambio
   function afterChange(){
     updateHUD();
     checkGoal();
@@ -1162,7 +1162,7 @@
     els.timerPill.textContent = '00:00';
   }
 
-  // ---------- Reiniciar ----------
+  // Reiniciar
   function resetPieceVisuals(){
     SCREW_IDS.forEach(function(id){
       screwEls[id].classList.remove('gone', 'spinning', 'reverse', 'xray-target', 'blocker-flash');
@@ -1224,7 +1224,7 @@
     if (state.goal === 'desarmar') startAssembly(); else resetGame();
   });
 
-  // ---------- Controles de la barra superior ----------
+  // Controles de la barra superior
   function applyMode(){
     var guia = state.mode === 'guia';
     els.modeBtnText.textContent = guia ? 'Modo Guía' : 'Modo Libre';
@@ -1286,7 +1286,7 @@
   var savedTheme = store.get('kingdog.theme', '');
   if (savedTheme === 'light' || savedTheme === 'dark') document.documentElement.setAttribute('data-theme', savedTheme);
 
-  // ---------- Atajos de teclado ----------
+  // Atajos de teclado
   document.addEventListener('keydown', function(e){
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var t = e.target;
@@ -1307,7 +1307,7 @@
     if (document.hidden && state.started && !state.finished) setPaused(true);
   });
 
-  // ---------- Inicio ----------
+  // Inicio
   selectTool('destornillador');
   applyMode();
   applySound();
