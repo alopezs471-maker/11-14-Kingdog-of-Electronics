@@ -1,4 +1,5 @@
 # Kingdog of Electronics
+https://alopezs471-maker.github.io/11-14-Kingdog-of-Electronics/
 
 Kingdog of Electronics es un proyecto web con simuladores didácticos para desmontar y volver a montar dos equipos: un teléfono inteligente modular y una torre de PC de escritorio. Los modelos presentan componentes representativos y no sustituyen las instrucciones de servicio de un fabricante.
 
