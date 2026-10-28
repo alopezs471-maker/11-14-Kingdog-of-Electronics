@@ -15,8 +15,8 @@ Después, se debe visitar `http://localhost:4173/`. La página inicial permite e
 
 ## Simuladores disponibles
 
-- **Teléfono inteligente modular:** cuenta con 15 módulos, 14 tornillos y seis conectores flex. Su guía incluye 26 acciones para desmontarlo y 26 para volver a montarlo.
-- **Torre de PC:** cuenta con 11 módulos, 23 tornillos y siete conexiones o seguros. Su guía también incluye 26 acciones para desmontarla y 26 para volver a montarla.
+- **celular:** cuenta con 15 módulos, 14 tornillos y seis conectores flex. Su guía incluye 26 acciones para desmontarlo y 26 para volver a montarlo.
+- **Torre:** cuenta con 11 módulos, 23 tornillos y siete conexiones o seguros. Su guía también incluye 26 acciones para desmontarla y 26 para volver a montarla.
 
 ## Funciones principales
 
