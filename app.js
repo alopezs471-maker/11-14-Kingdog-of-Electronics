@@ -2,7 +2,7 @@
   "use strict";
 
   /* 
-   *  Kingdog · Simulador de reparación de smartphone modular
+   *  Kingdog · Simulador de reparación de celular
    *  Desmontaje y montaje guiados de 15 módulos, 6 flexes y 14 tornillos.
    *  Las piezas encajan por capas y muestran en rojo sus bloqueos activos.
   */
@@ -1230,8 +1230,8 @@
     els.modeBtnText.textContent = guia ? 'Modo Guía' : 'Modo Libre';
     els.modeBtn.setAttribute('aria-pressed', guia ? 'true' : 'false');
     els.modeLabel.textContent = guia
-      ? 'Smartphone modular · guía paso a paso de 15 módulos'
-      : 'Smartphone modular · desmonta sus componentes libremente';
+      ? 'celular · guía paso a paso de 15 módulos'
+      : 'celular · desmonta sus componentes libremente';
   }
   els.modeBtn.addEventListener('click', function(){
     state.mode = state.mode === 'guia' ? 'libre' : 'guia';

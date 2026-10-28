@@ -3,7 +3,7 @@
 ## 1. Páginas y selector
 
 - `index.html` contiene el selector de equipos.
-- El selector conduce a `smartphone.html` o `pc.html`. Desde cada simulador hay un control para regresar al selector.
+- El selector conduce a `celular.html` o `pc.html`. Desde cada simulador hay un control para regresar al selector.
 - `app.js` controla el simulador del teléfono y `pc.js` controla el de la torre. Cada página mantiene su propio estado.
 
 ## 2. Simulador del teléfono
