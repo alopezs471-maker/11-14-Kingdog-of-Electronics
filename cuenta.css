@@ -1,0 +1,11 @@
+.cuenta { max-width: 560px; margin: 36px auto 0; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); }
+.cuenta h2 { margin-top: 0; }
+.cuenta p { color: var(--muted); line-height: 1.5; }
+.cuenta form { display: grid; gap: 12px; }
+.cuenta label { display: grid; gap: 6px; color: var(--muted); font-size: .85rem; }
+.cuenta input { width: 100%; padding: 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; }
+.cuenta button { padding: 11px 15px; border: 1px solid #77e1c466; border-radius: 9px; background: #1c5548; color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.cuenta .secondary { background: transparent; }
+.cuenta-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.cuenta [hidden] { display: none; }
+.cuenta .message { min-height: 1.4em; margin-bottom: 0; color: var(--mint); }
