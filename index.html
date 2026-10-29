@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101619">
   <title>Kingdog · Taller de electrónica</title>
+  <link rel="stylesheet" href="cuenta.css">
   <style>
     :root {
       color-scheme: dark;
@@ -101,10 +102,10 @@
             <div class="phone-art"><div class="phone-glass"></div></div>
           </div>
           <div class="card-top"><span class="tag">Móvil · 15 módulos</span><span class="available">Disponible</span></div>
-          <h2>celular</h2>
+          <h2>Smartphone modular</h2>
           <p class="card-copy">Explora pantalla, batería, cámaras, placas, sensores y conexiones flex en un teléfono didáctico.</p>
           <ul class="feature-list"><li>26 pasos</li><li>14 tornillos</li><li>6 conectores</li></ul>
-          <a class="launch" href="celular.html"><span>Abrir simulador del teléfono</span><span aria-hidden="true">↗</span></a>
+          <a class="launch" href="smartphone.html"><span>Abrir simulador del teléfono</span><span aria-hidden="true">↗</span></a>
         </article>
         <article class="device-card">
           <div class="device-art" aria-hidden="true">
@@ -112,15 +113,33 @@
             <div class="tower-art"><div class="tower-sidepanel"></div><div class="tower-front"></div></div>
           </div>
           <div class="card-top"><span class="tag">PC de escritorio · torre</span><span class="available">Disponible</span></div>
-          <h2>Torre</h2>
+          <h2>Torre de PC</h2>
           <p class="card-copy">Desarma y rearma una torre con placa base, GPU, memoria RAM, procesador, refrigeración, ventiladores y fuente de poder.</p>
           <ul class="feature-list"><li>26 pasos</li><li>23 tornillos</li><li>7 conexiones</li></ul>
           <a class="launch" href="pc.html"><span>Abrir simulador de la torre</span><span aria-hidden="true">↗</span></a>
         </article>
       </section>
       <p class="note">Los dos simuladores son modelos didácticos; la disposición real de componentes puede variar según el equipo.</p>
+      <section class="cuenta" aria-labelledby="cuenta-heading">
+        <h2 id="cuenta-heading">Tu cuenta</h2>
+        <p>Inicia sesión o crea una cuenta para tener tu perfil en Kingdog.</p>
+        <form id="cuenta-form">
+          <label id="name-field" hidden>Nombre <input name="name" maxlength="80" autocomplete="name"></label>
+          <label>Correo electrónico <input name="email" type="email" maxlength="254" autocomplete="email" required></label>
+          <label>Contraseña <input name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required></label>
+          <button id="cuenta-submit" type="submit">Iniciar sesión</button>
+        </form>
+        <div class="cuenta-actions"><button class="secondary" id="cuenta-toggle" type="button">Crear una cuenta</button></div>
+        <form id="profile-form" hidden>
+          <p>Correo: <span id="profile-email"></span></p>
+          <label>Nombre <input name="name" maxlength="80" required></label>
+          <div class="cuenta-actions"><button type="submit">Guardar perfil</button><button class="secondary" id="logout" type="button">Cerrar sesión</button></div>
+        </form>
+        <p class="message" id="cuenta-message" role="status" aria-live="polite"></p>
+      </section>
     </main>
     <footer class="footer"><span>Kingdog · Electronics lab</span><span>Usa el ratón o la pantalla táctil</span></footer>
   </div>
+  <script src="cuenta.js" defer></script>
 </body>
 </html>
